@@ -16,6 +16,15 @@ public class Point {
     public Point() {
         x = y = z = 0;
     }
+    
+    /**
+     * 
+     * @param v 
+     */
+    public Point(float v) 
+    {
+        x = y = z = v;
+    }
 
     /**
      * 
@@ -39,6 +48,28 @@ public class Point {
         this.x = Float.parseFloat(x);
         this.y = Float.parseFloat(y);
         this.z = Float.parseFloat(z);
+    }
+    
+    /**
+     * 
+     * @param point 
+     */
+    public Point(Point point) 
+    {
+        x = point.x;
+        y = point.y;
+        z = point.z;
+    }
+    
+    /**
+     * 
+     * @param point 
+     */
+    public void add(Point point) 
+    {
+        x += point.x;
+        y += point.y;
+        z += point.z;
     }
     
 }

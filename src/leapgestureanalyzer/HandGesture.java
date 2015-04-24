@@ -236,12 +236,95 @@ public final class HandGesture
     }
     
     /**
+     * Adjust the data to the specified number of frames 
+     * @param array
+     * @param N
+     */
+    public void adjustArray(ArrayList<Point> array, int N) 
+    {
+        //  Generate the new array
+        ArrayList<Point> newArray = new ArrayList<>(N);
+        
+        //  Copy the data from the old array to the new array
+        int n = array.size();
+        for(int i = 0; i < n; i += 1) 
+        {
+            int pos;
+            pos = (int)Commons.map(i, 0, n, 0, N);
+            newArray.add(pos, array.get(i));
+        }
+        
+        //  Fill null spaces
+        for(int i = 0; i < N - 1; i += 1) 
+        {
+            //  If the current index is null
+            if(newArray.get(i) == null) 
+            {
+                //  Find the next not null index
+                int j = i + 1;
+                while(newArray.get(j) == null && j < N - 1) 
+                {
+                    j += 1;
+                }
+                
+                //  If no next not null index then exit the for loop
+                if(j == N - 1) 
+                {
+                    break;
+                }
+                
+                Point value = new Point();
+                value.x = (newArray.get(j).x - newArray.get(i - 1).x) / (j - (i - 1));
+                value.y = (newArray.get(j).y - newArray.get(i - 1).y) / (j - (i - 1));
+                value.z = (newArray.get(j).z - newArray.get(i - 1).z) / (j - (i - 1));
+                
+                //  Fill the null positions
+                for(int k = i; k < j; k += 1) 
+                {
+                    Point newPoint = new Point(newArray.get(k - 1));
+                    newPoint.add(value);
+                    newArray.add(k, newPoint);
+                }
+                
+                //  Continue after the last not null known position
+                i = j;
+            }
+        }
+        
+        //  Check if the last position is null
+        if(newArray.get(N - 1) == null) 
+        {
+            //  Calculate the values of the point on the last position
+            Point newPoint = new Point();
+            newPoint.x = newArray.get(N - 2).x - newArray.get(N - 3).x;
+            newPoint.y = newArray.get(N - 2).y - newArray.get(N - 3).y;
+            newPoint.z = newArray.get(N - 2).z - newArray.get(N - 3).z;
+            newPoint.add(newArray.get(N - 2));
+            
+            //  Add the new point on the last position
+            newArray.add(N - 1, newPoint);
+        }
+        
+        //  Replace the old array with the new array
+        array = newArray;
+    }
+    
+    /**
      * 
      * @return 
      */
     public String getName() 
     {
         return mGestureName;
+    }
+    
+    /**
+     * Return the number of frames of the gesture
+     * @return 
+     */
+    public int getNumFrames() 
+    {
+        return mTimestamp.size();
     }
     
     /**

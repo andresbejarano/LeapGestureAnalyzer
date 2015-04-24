@@ -152,7 +152,7 @@ public class HMMFrame extends javax.swing.JInternalFrame
      */
     private void setTrainingSequences() 
     {
-        //  Train with the first 5 sequences found for each gesture
+        //  Train with the sequences found for each gesture
         int n = mHandGestures.size();
         for(int i = 0; i < n; i += 1) 
         {
