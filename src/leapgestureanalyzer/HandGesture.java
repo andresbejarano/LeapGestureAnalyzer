@@ -13,90 +13,109 @@ import java.util.ArrayList;
  */
 public final class HandGesture 
 {    
-    //  The main class of the application
-    private LeapGestureAnalyzer mParent;
+    
+    public static final int TYPE_CLICK = 2;
+    public static final String TYPE_CLICK_NAME = "Click";
+    //  The different types of gesture
+    public static final int TYPE_NONE = 0;
+    
+    //  The names of the different types of gestures
+    public static final String TYPE_NONE_NAME = "None";
+    public static final int TYPE_PINCH = 1;
+    public static final String TYPE_PINCH_NAME = "Pinch";
+    public static final int TYPE_STOP = 3;
+    public static final String TYPE_STOP_NAME = "Stop";
+    public static final int TYPE_WAVE = 4;
+    public static final String TYPE_WAVE_NAME = "Wave";
+
+    /**
+     *
+     * @param type
+     * @return
+     */
+    public static final String getGestureTypeName(int type) {
+        switch(type)
+        {
+            case TYPE_PINCH:
+                return TYPE_PINCH_NAME;
+                
+            case TYPE_CLICK:
+                return TYPE_CLICK_NAME;
+                
+            case TYPE_STOP:
+                return TYPE_STOP_NAME;
+                
+            case TYPE_WAVE:
+                return TYPE_WAVE_NAME;
+                
+            default:
+                return TYPE_NONE_NAME;
+        }
+    }
+    public ArrayList<Point> mArmDirection;
+    public ArrayList<Point> mElbowPosition;
+    //  The file with the content of the hand gesture
+    public File mFile;
     
     //  The name of the file of the gesture
     private String mGestureName;
     
-    //  The different types of gesture
-    public static final int TYPE_NONE = 0;
-    public static final int TYPE_PINCH = 1;
-    public static final int TYPE_CLICK = 2;
-    public static final int TYPE_STOP = 3;
-    public static final int TYPE_WAVE = 4;
-    
-    //  The names of the different types of gestures
-    public static final String TYPE_NONE_NAME = "None";
-    public static final String TYPE_PINCH_NAME = "Pinch";
-    public static final String TYPE_CLICK_NAME = "Click";
-    public static final String TYPE_STOP_NAME = "Stop";
-    public static final String TYPE_WAVE_NAME = "Wave";
-    
-    //	The timestamp of the frames
-    public ArrayList<Float> mTimestamp;
-
-    //	The information of the hand
-    public ArrayList<Point> mPalmPosition;
-    public ArrayList<Point> mPalmNormal;
-    public ArrayList<Point> mPalmVelocity;
-    public ArrayList<Point> mHandDirection;
-    public ArrayList<Float> mPinchStrength;
+    //  Indicates the type of gesture
+    public int mGestureType;
     public ArrayList<Float> mGrabStrength;
-
-    //	The information of the arm
-    public ArrayList<Point> mWristPosition;
-    public ArrayList<Point> mElbowPosition;
-    public ArrayList<Point> mArmDirection;
-
-    //	The information of the Thumb finger
-    public ArrayList<Point> mThumbDirection;
-    public ArrayList<Point> mThumbTipPosition;
-    public ArrayList<Point> mThumbMetacarpalPrevJoint;
-    public ArrayList<Point> mThumbProximalPrevJoint;
-    public ArrayList<Point> mThumbIntermediatePrevJoint;
-    public ArrayList<Point> mThumbDistalPrevJoint;
+    public ArrayList<Point> mHandDirection;
 
     //	The information of the Index finger
     public ArrayList<Point> mIndexDirection;
-    public ArrayList<Point> mIndexTipPosition;
+    public ArrayList<Point> mIndexDistalPrevJoint;
+    public ArrayList<Point> mIndexIntermediatePrevJoint;
     public ArrayList<Point> mIndexMetacarpalPrevJoint;
     public ArrayList<Point> mIndexProximalPrevJoint;
-    public ArrayList<Point> mIndexIntermediatePrevJoint;
-    public ArrayList<Point> mIndexDistalPrevJoint;
+    public ArrayList<Point> mIndexTipPosition;
+    //  Indicates if the file was loaded successfully
+    private boolean mIsFileLoaded;
 
     //	The information of the Middle finger
     public ArrayList<Point> mMiddleDirection;
-    public ArrayList<Point> mMiddleTipPosition;
+    public ArrayList<Point> mMiddleDistalPrevJoint;
+    public ArrayList<Point> mMiddleIntermediatePrevJoint;
     public ArrayList<Point> mMiddleMetacarpalPrevJoint;
     public ArrayList<Point> mMiddleProximalPrevJoint;
-    public ArrayList<Point> mMiddleIntermediatePrevJoint;
-    public ArrayList<Point> mMiddleDistalPrevJoint;
+    public ArrayList<Point> mMiddleTipPosition;
+    public ArrayList<Point> mPalmNormal;
 
-    //	The information of the Ring finger
-    public ArrayList<Point> mRingDirection;
-    public ArrayList<Point> mRingTipPosition;
-    public ArrayList<Point> mRingMetacarpalPrevJoint;
-    public ArrayList<Point> mRingProximalPrevJoint;
-    public ArrayList<Point> mRingIntermediatePrevJoint;
-    public ArrayList<Point> mRingDistalPrevJoint;
+    //	The information of the hand
+    public ArrayList<Point> mPalmPosition;
+    public ArrayList<Point> mPalmVelocity;
+    //  The main class of the application
+    private LeapGestureAnalyzer mParent;
+    public ArrayList<Float> mPinchStrength;
 
     //	The information of the Pinky finger
     public ArrayList<Point> mPinkyDirection;
-    public ArrayList<Point> mPinkyTipPosition;
+    public ArrayList<Point> mPinkyDistalPrevJoint;
+    public ArrayList<Point> mPinkyIntermediatePrevJoint;
     public ArrayList<Point> mPinkyMetacarpalPrevJoint;
     public ArrayList<Point> mPinkyProximalPrevJoint;
-    public ArrayList<Point> mPinkyIntermediatePrevJoint;
-    public ArrayList<Point> mPinkyDistalPrevJoint;
-    
-    //  Indicates if the file was loaded successfully
-    private boolean mIsFileLoaded;
-    
-    //  The file with the content of the hand gesture
-    public File mFile;
-    
-    //  Indicates the type of gesture
-    public int mGestureType;
+    public ArrayList<Point> mPinkyTipPosition;
+    //	The information of the Ring finger
+    public ArrayList<Point> mRingDirection;
+    public ArrayList<Point> mRingDistalPrevJoint;
+    public ArrayList<Point> mRingIntermediatePrevJoint;
+    public ArrayList<Point> mRingMetacarpalPrevJoint;
+    public ArrayList<Point> mRingProximalPrevJoint;
+    public ArrayList<Point> mRingTipPosition;
+    //	The information of the Thumb finger
+    public ArrayList<Point> mThumbDirection;
+    public ArrayList<Point> mThumbDistalPrevJoint;
+    public ArrayList<Point> mThumbIntermediatePrevJoint;
+    public ArrayList<Point> mThumbMetacarpalPrevJoint;
+    public ArrayList<Point> mThumbProximalPrevJoint;
+    public ArrayList<Point> mThumbTipPosition;
+    //	The timestamp of the frames
+    public ArrayList<Float> mTimestamp;
+    //	The information of the arm
+    public ArrayList<Point> mWristPosition;
 
     /**
      * 
@@ -236,11 +255,142 @@ public final class HandGesture
     }
     
     /**
+     * 
+     * @param N 
+     */
+    public void adjustArrays(int N) 
+    {
+        //  The timestamp of the frames
+        adjustFloatArray(mTimestamp, N);
+
+        //  The information of the hand
+        adjustPointArray(mPalmPosition, N);
+        adjustPointArray(mPalmNormal, N);
+        adjustPointArray(mPalmVelocity, N);
+        adjustPointArray(mHandDirection, N);
+        adjustFloatArray(mPinchStrength, N);
+        adjustFloatArray(mGrabStrength, N);
+
+        //  The information of the arm
+        adjustPointArray(mWristPosition, N);
+        adjustPointArray(mElbowPosition, N);
+        adjustPointArray(mArmDirection, N);
+
+        //  The information of the Thumb finger
+        adjustPointArray(mThumbDirection, N);
+        adjustPointArray(mThumbTipPosition, N);
+        adjustPointArray(mThumbMetacarpalPrevJoint, N);
+        adjustPointArray(mThumbProximalPrevJoint, N);
+        adjustPointArray(mThumbIntermediatePrevJoint, N);
+        adjustPointArray(mThumbDistalPrevJoint, N);
+
+        //  The information of the Index finger
+        adjustPointArray(mIndexDirection, N);
+        adjustPointArray(mIndexTipPosition, N);
+        adjustPointArray(mIndexMetacarpalPrevJoint, N);
+        adjustPointArray(mIndexProximalPrevJoint, N);
+        adjustPointArray(mIndexIntermediatePrevJoint, N);
+        adjustPointArray(mIndexDistalPrevJoint, N);
+
+        //  The information of the Middle finger
+        adjustPointArray(mMiddleDirection, N);
+        adjustPointArray(mMiddleTipPosition, N);
+        adjustPointArray(mMiddleMetacarpalPrevJoint, N);
+        adjustPointArray(mMiddleProximalPrevJoint, N);
+        adjustPointArray(mMiddleIntermediatePrevJoint, N);
+        adjustPointArray(mMiddleDistalPrevJoint, N);
+
+        //  The information of the Ring finger
+        adjustPointArray(mRingDirection, N);
+        adjustPointArray(mRingTipPosition, N);
+        adjustPointArray(mRingMetacarpalPrevJoint, N);
+        adjustPointArray(mRingProximalPrevJoint, N);
+        adjustPointArray(mRingIntermediatePrevJoint, N);
+        adjustPointArray(mRingDistalPrevJoint, N);
+
+        //  The information of the Pinky finger
+        adjustPointArray(mPinkyDirection, N);
+        adjustPointArray(mPinkyTipPosition, N);
+        adjustPointArray(mPinkyMetacarpalPrevJoint, N);
+        adjustPointArray(mPinkyProximalPrevJoint, N);
+        adjustPointArray(mPinkyIntermediatePrevJoint, N);
+        adjustPointArray(mPinkyDistalPrevJoint, N);
+    }
+    
+    /**
+     * 
+     * @param array
+     * @param N 
+     */
+    public void adjustFloatArray(ArrayList<Float> array, int N) 
+    {
+        //  Generate the new array
+        ArrayList<Float> newArray = new ArrayList<>(N);
+        
+        //  Copy the data from the old array to the new array
+        int n = array.size();
+        for(int i = 0; i < n; i += 1) 
+        {
+            int pos;
+            pos = (int)Commons.map(i, 0, n, 0, N);
+            newArray.add(pos, array.get(i));
+        }
+        
+        //  Fill null spaces
+        for(int i = 0; i < N - 1; i += 1) 
+        {
+            //  If the current index is null
+            if(newArray.get(i) == null) 
+            {
+                //  Find the next not null index
+                int j = i + 1;
+                while(newArray.get(j) == null && j < N - 1) 
+                {
+                    j += 1;
+                }
+                
+                //  If no next not null index then exit the for loop
+                if(j == N - 1) 
+                {
+                    break;
+                }
+                
+                //  Calculate the value step for linear interpolation
+                float value = (newArray.get(j) - newArray.get(i - 1)) / (j - (i - 1));
+                
+                //  Fill the null positions
+                for(int k = i; k < j; k += 1) 
+                {
+                    newArray.add(k, newArray.get(k - 1) + value);
+                }
+                
+                //  Continue after the last not null known position
+                i = j;
+            }
+        }
+        
+        //  Check if the last position is null
+        if(newArray.get(N - 1) == null) 
+        {
+            //  Calculate the value of the last position
+            float value = newArray.get(N - 2) - newArray.get(N - 3);
+            value += newArray.get(N - 2);
+            
+            //  Add the new value on the last position
+            newArray.add(N - 1, value);
+        }
+        
+        //  Replace the old array with the new array
+        array = newArray;
+    }
+    
+    /**
      * Adjust the data to the specified number of frames 
      * @param array
      * @param N
      */
-    public void adjustArray(ArrayList<Point> array, int N) 
+    @SuppressWarnings("UnusedAssignment")
+    public void adjustPointArray(ArrayList<Point> array, int N) 
     {
         //  Generate the new array
         ArrayList<Point> newArray = new ArrayList<>(N);
@@ -310,8 +460,27 @@ public final class HandGesture
     }
     
     /**
-     * 
+     *
      * @return 
+     */
+    public float getDurationInSecond() 
+    {
+        int n = mTimestamp.size();
+        return (float)((mTimestamp.get(n - 1).longValue() - mTimestamp.get(0).longValue()) / 1000000.0f);
+    }
+    
+    /**
+     *
+     * @return
+     */
+    public int getGestureType() 
+    {
+        return mGestureType;
+    }
+    
+    /**
+     *
+     * @return
      */
     public String getName() 
     {
@@ -328,12 +497,81 @@ public final class HandGesture
     }
     
     /**
-     * 
-     * @return 
+     *
+     * @param array 
+     * @return
      */
-    boolean isFileLoaded() 
+    public int[] getObservationSequence(ArrayList<Point> array) 
     {
-        return mIsFileLoaded;
+        // Get the size of the gesture
+        int n = array.size();
+        int[] B = new int[n];
+        
+        for(int i = 1; i < n; i += 1)
+        {
+            // Get the previous and current vectors
+            Point v0 = array.get(i - 1);
+            Point v1 = array.get(i);
+            
+            // Get the difference between both vector
+            double x = v1.x - v0.x;
+            double y = v1.y - v0.y;
+            double z = v1.z - v0.z;
+            
+            // Calculate the emission according to the difference of direction
+            if(x >= 0)
+            {
+                if(y >= 0)
+                {
+                    if(z >= 0)
+                    {
+                        B[i] = 0;
+                    }
+                    else
+                    {
+                        B[i] = 1;
+                    }
+                }
+                else
+                {
+                    if(z >= 0)
+                    {
+                        B[i] = 2;
+                    }
+                    else
+                    {
+                        B[i] = 3;
+                    }
+                }
+            }
+            else
+            {
+                if(y >= 0)
+                {
+                    if(z >= 0)
+                    {
+                        B[i] = 4;
+                    }
+                    else
+                    {
+                        B[i] = 5;
+                    }
+                }
+                else
+                {
+                    if(z >= 0)
+                    {
+                        B[i] = 6;
+                    }
+                    else
+                    {
+                        B[i] = 7;
+                    }
+                }
+            }
+        }
+        
+        return B;
     }
     
     /**
@@ -398,12 +636,21 @@ public final class HandGesture
     }
     
     /**
-     * 
-     * @param type 
+     *
+     * @return 
      */
-    public void setGestureType(int type) 
+    boolean isFileLoaded() 
     {
-        switch(type) 
+        return mIsFileLoaded; 
+    }
+    
+    /**
+     *
+     * @param type
+     */
+    public void setGestureType(int type)
+    {
+        switch(type)
         {
             case TYPE_PINCH:
                 mGestureType = TYPE_PINCH;
@@ -426,127 +673,5 @@ public final class HandGesture
         }
     }
     
-    /**
-     * 
-     * @return 
-     */
-    public int getGestureType() 
-    {
-        return mGestureType;
-    }
-    
-    /**
-     * 
-     * @param array
-     * @return 
-     */
-    public int[] getObservationSequence(ArrayList<Point> array) 
-    {
-        // Get the size of the gesture
-        int n = array.size();
-        int[] B = new int[n];
-        
-        for(int i = 1; i < n; i += 1) 
-        {
-            // Get the previous and current vectors
-            Point v0 = array.get(i - 1);
-            Point v1 = array.get(i);
-            
-            // Get the difference between both vector
-            double x = v1.x - v0.x;
-            double y = v1.y - v0.y;
-            double z = v1.z - v0.z;
-            
-            // Calculate the emission according to the difference of direction
-            if(x >= 0) 
-            {
-                if(y >= 0) 
-                {
-                    if(z >= 0) 
-                    {
-                        B[i] = 0;
-                    }
-                    else 
-                    {
-                        B[i] = 1;
-                    }
-                }
-                else 
-                {
-                    if(z >= 0) 
-                    {
-                        B[i] = 2;
-                    }
-                    else 
-                    {
-                        B[i] = 3;
-                    }
-                }
-            }
-            else 
-            {
-                if(y >= 0) 
-                {
-                    if(z >= 0) 
-                    {
-                        B[i] = 4;
-                    }
-                    else 
-                    {
-                        B[i] = 5;
-                    }
-                }
-                else 
-                {
-                    if(z >= 0) 
-                    {
-                        B[i] = 6;
-                    }
-                    else 
-                    {
-                        B[i] = 7;
-                    }
-                }	
-            }
-        }
-        
-        return B;
-    }
-    
-    /**
-     *  
-     * @return 
-     */
-    public float getDurationInSecond() 
-    {
-        int n = mTimestamp.size();
-        return (float)((mTimestamp.get(n - 1).longValue() - mTimestamp.get(0).longValue()) / 1000000.0f);
-    }
-    
-    /**
-     * 
-     * @param type
-     * @return 
-     */
-    public static final String getGestureTypeName(int type) 
-    {
-        switch(type) 
-        {
-            case TYPE_PINCH:
-                return TYPE_PINCH_NAME;
-                
-            case TYPE_CLICK:
-                return TYPE_CLICK_NAME;
-                
-            case TYPE_STOP:
-                return TYPE_STOP_NAME;
-                
-            case TYPE_WAVE:
-                return TYPE_WAVE_NAME;
-                
-            default:
-                return TYPE_NONE_NAME;
-        }
-    }
     
 }
