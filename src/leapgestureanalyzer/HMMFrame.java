@@ -1,15 +1,20 @@
 package leapgestureanalyzer;
 
 import be.ac.ulg.montefiore.run.jahmm.Hmm;
-import be.ac.ulg.montefiore.run.jahmm.ObservationInteger;
-import be.ac.ulg.montefiore.run.jahmm.OpdfIntegerFactory;
-import be.ac.ulg.montefiore.run.jahmm.learn.KMeansLearner;
+import be.ac.ulg.montefiore.run.jahmm.ObservationDiscrete;
+import be.ac.ulg.montefiore.run.jahmm.OpdfDiscreteFactory;
+import be.ac.ulg.montefiore.run.jahmm.learn.BaumWelchLearner;
 import java.util.ArrayList;
 import java.util.List;
+import leapgestureanalyzer.HandGesture.Direction;
 
 /**
  *
  * @author AndresMauricio
+ * 
+ * Examples on:
+ * https://code.google.com/p/jahmm/wiki/Example
+ * http://ranger.uta.edu/~huber/cse4392_SmartHome/Hwk/Tutorial.html
  */
 public class HMMFrame extends javax.swing.JInternalFrame 
 {
@@ -23,24 +28,20 @@ public class HMMFrame extends javax.swing.JInternalFrame
     private float[][] mConfussionMatrix;
     
     //  The HMM for pinch gestures
-    private final List<List<ObservationInteger>> mPinchSequences;
-    private int nPinchTraining;
-    private Hmm<ObservationInteger> mPinchHmm;
+    private final List<List<ObservationDiscrete<Direction>>> mPinchSequences;
+    private Hmm<ObservationDiscrete<Direction>> mPinchHmm;
     
     //  The HMM for click gestures
-    private final List<List<ObservationInteger>> mClickSequences;
-    private int nClickTraining;
-    private Hmm<ObservationInteger> mClickHmm;
+    private final List<List<ObservationDiscrete<Direction>>> mClickSequences;
+    private Hmm<ObservationDiscrete<Direction>> mClickHmm;
     
     //  The HMM for stop gestures
-    private final List<List<ObservationInteger>> mStopSequences;
-    private int nStopTraining;
-    private Hmm<ObservationInteger> mStopHmm;
+    private final List<List<ObservationDiscrete<Direction>>> mStopSequences;
+    private Hmm<ObservationDiscrete<Direction>> mStopHmm;
     
     //  The HMM for wave gestures
-    private final List<List<ObservationInteger>> mWaveSequences;
-    private int nWaveTraining;
-    private Hmm<ObservationInteger> mWaveHmm;
+    private final List<List<ObservationDiscrete<Direction>>> mWaveSequences;
+    private Hmm<ObservationDiscrete<Direction>> mWaveHmm;
 
     /**
      * 
@@ -94,8 +95,32 @@ public class HMMFrame extends javax.swing.JInternalFrame
      */
     private void buildHmm() 
     {
-        //  Train the Pinch HMM
-        KMeansLearner<ObservationInteger> mPinchKml = new KMeansLearner<>(
+        // Train the Pinch HMM
+        int nStates = mParent.getNumStates();
+        
+        Hmm mInitPinchHmm = new Hmm<>(nStates, new OpdfDiscreteFactory<>(Direction.class));
+        BaumWelchLearner mPinchBwl = new BaumWelchLearner();
+        mPinchHmm = mPinchBwl.learn(mInitPinchHmm, mPinchSequences);
+        mParent.write("Pinch HMM learned from Baum-Welch");
+        
+        Hmm mInitClickHmm = new Hmm<>(nStates, new OpdfDiscreteFactory<>(Direction.class));
+        BaumWelchLearner mClickBwl = new BaumWelchLearner();
+        mClickHmm = mClickBwl.learn(mInitClickHmm, mClickSequences);
+        mParent.write("Click HMM learned from Baum-Welch");
+        
+        Hmm mInitStopHmm = new Hmm<>(nStates, new OpdfDiscreteFactory<>(Direction.class));
+        BaumWelchLearner mStopBwl = new BaumWelchLearner();
+        mStopHmm = mStopBwl.learn(mInitStopHmm, mStopSequences);
+        mParent.write("Stop HMM learned from Baum-Welch");
+        
+        Hmm mInitWaveHmm = new Hmm<>(nStates, new OpdfDiscreteFactory<>(Direction.class));
+        BaumWelchLearner mWaveBwl = new BaumWelchLearner();
+        mWaveHmm = mWaveBwl.learn(mInitWaveHmm, mWaveSequences);
+        mParent.write("Wave HMM learned from Baum-Welch");
+        
+        /*
+        KMeansLearner mPinchKml;
+        mPinchKml = new KMeansLearner(
                 mParent.getNumStates(),
                 new OpdfIntegerFactory(8), 
                 mPinchSequences);
@@ -106,9 +131,12 @@ public class HMMFrame extends javax.swing.JInternalFrame
         //mPinchHmm = mPinchBwl.learn(mPinchHmm, mPinchSequences);
         mParent.write("Pinch's HMM learned from Baum-Welch");
         mParent.write("HMM for Pinch gesture trained");
+        */
         
         //  Train the Click HMM
-        KMeansLearner<ObservationInteger> mClickKml = new KMeansLearner<>(
+        /*
+        KMeansLearner mClickKml;
+        mClickKml = new KMeansLearner(
                 mParent.getNumStates(),
                 new OpdfIntegerFactory(8), 
                 mClickSequences);
@@ -119,9 +147,11 @@ public class HMMFrame extends javax.swing.JInternalFrame
         //mClickHmm = mClickBwl.learn(mClickHmm, mClickSequences);
         mParent.write("Click's HMM learned from Baum-Welch");
         mParent.write("HMM for Click gesture trained");
+        */
         
         //  Train the Stop HMM
-        KMeansLearner<ObservationInteger> mStopKml = new KMeansLearner<>(
+        /*
+        KMeansLearner mStopKml = new KMeansLearner(
                 mParent.getNumStates(),
                 new OpdfIntegerFactory(8), 
                 mStopSequences);
@@ -132,9 +162,11 @@ public class HMMFrame extends javax.swing.JInternalFrame
         //mStopHmm = mStopBwl.learn(mStopHmm, mStopSequences);
         mParent.write("Stop's HMM learned from Baum-Welch");
         mParent.write("HMM for Stop gesture trained");
+        */
         
         //  Train the Wave HMM
-        KMeansLearner<ObservationInteger> mWaveKml = new KMeansLearner<>(
+        /*
+        KMeansLearner mWaveKml = new KMeansLearner(
                 mParent.getNumStates(),
                 new OpdfIntegerFactory(8), 
                 mWaveSequences);
@@ -145,6 +177,7 @@ public class HMMFrame extends javax.swing.JInternalFrame
         //mWaveHmm = mWaveBwl.learn(mWaveHmm, mWaveSequences);
         mParent.write("Wave's HMM learned from Baum-Welch");
         mParent.write("HMM for Wave gesture trained");
+        */
     }
     
     /**
@@ -165,64 +198,36 @@ public class HMMFrame extends javax.swing.JInternalFrame
                 case HandGesture.TYPE_PINCH:
                 {
                     mParent.write(gesture.getName() + " used for training as a Pinch gesture");
-                    List<ObservationInteger> trainingSequence = new ArrayList<>();
-                    int[] sequences = gesture.getObservationSequence(gesture.mPalmPosition);
-                    writeSequence(sequences);
-                    for(int j = 0; j < sequences.length; j += 1) 
-                    {
-                        trainingSequence.add(new ObservationInteger(sequences[j]));
-                    }
-                    mParent.write("Training sequence: " + trainingSequence.toString());
-                    mPinchSequences.add(trainingSequence);
-                    nPinchTraining += 1;
+                    List<ObservationDiscrete<Direction>> list = gesture.getDiscreteObservationSequence(gesture.mPalmPosition);
+                    mPinchSequences.add(gesture.getDiscreteObservationSequence(gesture.mPalmPosition));
+                    mParent.write("Training sequence: " + list.toString());
                     break;
                 }
                 
                 case HandGesture.TYPE_CLICK:
                 {
                     mParent.write(gesture.getName() + " used for training as a Click gesture");
-                    List<ObservationInteger> trainingSequence = new ArrayList<>();
-                    int[] sequences = gesture.getObservationSequence(gesture.mPalmPosition);
-                    writeSequence(sequences);
-                    for(int j = 0; j < sequences.length; j += 1) 
-                    {
-                        trainingSequence.add(new ObservationInteger(sequences[j]));
-                    }
-                    mParent.write("Training sequence: " + trainingSequence.toString());
-                    mClickSequences.add(trainingSequence);
-                    nClickTraining += 1;
+                    List<ObservationDiscrete<Direction>> list = gesture.getDiscreteObservationSequence(gesture.mPalmPosition);
+                    mClickSequences.add(gesture.getDiscreteObservationSequence(gesture.mPalmPosition));
+                    mParent.write("Training sequence: " + list.toString());
                     break;
                 }
                 
                 case HandGesture.TYPE_STOP:
                 {
                     mParent.write(gesture.getName() + " used for training as a Stop gesture");
-                    List<ObservationInteger> trainingSequence = new ArrayList<>();
-                    int[] sequences = gesture.getObservationSequence(gesture.mPalmPosition);
-                    writeSequence(sequences);
-                    for(int j = 0; j < sequences.length; j += 1) 
-                    {
-                        trainingSequence.add(new ObservationInteger(sequences[j]));
-                    }
-                    mParent.write("Training sequence: " + trainingSequence.toString());
-                    mStopSequences.add(trainingSequence);
-                    nStopTraining += 1;
+                    List<ObservationDiscrete<Direction>> list = gesture.getDiscreteObservationSequence(gesture.mPalmPosition);
+                    mStopSequences.add(gesture.getDiscreteObservationSequence(gesture.mPalmPosition));
+                    mParent.write("Training sequence: " + list.toString());
                     break;
                 }
                 
                 case HandGesture.TYPE_WAVE:
                 {
                     mParent.write(gesture.getName() + " used for training as a Wave gesture");
-                    List<ObservationInteger> trainingSequence = new ArrayList<>();
-                    int[] sequences = gesture.getObservationSequence(gesture.mPalmPosition);
-                    writeSequence(sequences);
-                    for(int j = 0; j < sequences.length; j += 1) 
-                    {
-                        trainingSequence.add(new ObservationInteger(sequences[j]));
-                    }
-                    mParent.write("Training sequence: " + trainingSequence.toString());
-                    mWaveSequences.add(trainingSequence);
-                    nWaveTraining += 1;
+                    List<ObservationDiscrete<Direction>> list = gesture.getDiscreteObservationSequence(gesture.mPalmPosition);
+                    mWaveSequences.add(gesture.getDiscreteObservationSequence(gesture.mPalmPosition));
+                    mParent.write("Training sequence: " + list.toString());
                     break;
                 }
                 

@@ -1,11 +1,13 @@
 package leapgestureanalyzer;
 
+import be.ac.ulg.montefiore.run.jahmm.ObservationDiscrete;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -13,20 +15,43 @@ import java.util.ArrayList;
  */
 public final class HandGesture 
 {    
+    /**
+     * Possible direction of the hand
+     */
+    public enum Direction {
+        
+        RUF, RUB, RDF, RDB, LUF, LUB, LDF, LDB;
+        
+        /**
+         * 
+         * @return 
+         */
+        public ObservationDiscrete<Direction> observation() {
+            return new ObservationDiscrete<>(this);
+        }
+    };
     
-    public static final int TYPE_CLICK = 2;
-    public static final String TYPE_CLICK_NAME = "Click";
     //  The different types of gesture
-    public static final int TYPE_NONE = 0;
+    public static final int TYPE_NONE   = 0;
+    public static final int TYPE_PINCH  = 1;
+    public static final int TYPE_CLICK  = 2;
+    public static final int TYPE_STOP   = 3;
+    public static final int TYPE_WAVE   = 4;
     
     //  The names of the different types of gestures
-    public static final String TYPE_NONE_NAME = "None";
-    public static final int TYPE_PINCH = 1;
-    public static final String TYPE_PINCH_NAME = "Pinch";
-    public static final int TYPE_STOP = 3;
-    public static final String TYPE_STOP_NAME = "Stop";
-    public static final int TYPE_WAVE = 4;
-    public static final String TYPE_WAVE_NAME = "Wave";
+    public static final String TYPE_NONE_NAME   = "None";
+    public static final String TYPE_PINCH_NAME  = "Pinch";
+    public static final String TYPE_CLICK_NAME  = "Click";
+    public static final String TYPE_STOP_NAME   = "Stop";
+    public static final String TYPE_WAVE_NAME   = "Wave";
+    
+    //  The types of usage of the gesture
+    public static final int TYPE_TRAINING   = 0;
+    public static final int TYPE_TRACKING   = 1;
+    
+    //  The names of the type usage of the gesture
+    public static final String TYPE_TRAINING_NAME = "Training";
+    public static final String TYPE_TRACKING_NAME = "Tracking";
 
     /**
      *
@@ -116,6 +141,9 @@ public final class HandGesture
     public ArrayList<Float> mTimestamp;
     //	The information of the arm
     public ArrayList<Point> mWristPosition;
+    
+    //  Indicates the type of usage of the gesture
+    private int mGestureUsage;
 
     /**
      * 
@@ -128,6 +156,8 @@ public final class HandGesture
         mParent = parent;
         
         mGestureName = file.getName();
+        
+        mGestureUsage = TYPE_TRAINING;
         
         initArrays();
         
@@ -497,6 +527,187 @@ public final class HandGesture
     }
     
     /**
+     * 
+     * @param array
+     * @return 
+     */
+    public int[] getIntegerObservationSequence(ArrayList<Point> array) 
+    {
+        //  Get the size of the array
+        int n = array.size();
+        
+        //  Initialize the sequence array
+        int[] sequence = new int[n - 1];
+        
+        //  Traverse the given array
+        for(int i = 1; i < n; i += 1) 
+        {
+            Point v0 = array.get((i - 1));
+            Point v1 = array.get(i);
+            double x = v1.x - v0.x;
+            double y = v1.y - v0.y;
+            double z = v1.z - v0.z;
+            sequence[i - 1] = getObservationInteger(x, y, z);
+        }
+        
+        //  Return the array
+        return sequence;
+    }
+    
+    /**
+     * 
+     * @param array
+     * @return 
+     */
+    public List<ObservationDiscrete<Direction>> getDiscreteObservationSequence(ArrayList<Point> array) 
+    {
+        //  Initialize the sequence list
+        List<ObservationDiscrete<Direction>> sequence;
+        sequence = new ArrayList<>();
+        
+        //  Traverse the given array
+        int n = array.size();
+        for(int i = 1; i < n; i += 1) 
+        {
+            Point v0 = array.get((i - 1));
+            Point v1 = array.get(i);
+            double x = v1.x - v0.x;
+            double y = v1.y - v0.y;
+            double z = v1.z - v0.z;
+            boolean add = sequence.add(getObservation(x, y, z));
+        }
+        
+        //  Return the sequence
+        return sequence;
+    }
+    
+    /**
+     * 
+     * @param x
+     * @param y
+     * @param z
+     * @return 
+     */
+    public int getObservationInteger(double x, double y, double z) 
+    {
+        if(x >= 0) 
+        {
+            if(y >= 0) 
+            {
+                if(z >= 0) 
+                {
+                    return 0;
+                }
+                else 
+                {
+                    return 1;
+                }
+            }
+            else 
+            {
+                if(z >= 0) 
+                {
+                    return 2;
+                }
+                else 
+                {
+                    return 3;
+                }
+            }
+        }
+        else 
+        {
+            if(y >= 0) 
+            {
+                if(z >= 0) 
+                {
+                    return 4;
+                }
+                else 
+                {
+                    return 5;
+                }
+            }
+            else 
+            {
+                if(y >= 0) 
+                {
+                    return 6;
+                }
+                else 
+                {
+                    return 7;
+                }
+            }
+        }
+    }
+    
+    /**
+     * 
+     * @param x
+     * @param y
+     * @param z
+     * @return 
+     */
+    public ObservationDiscrete<Direction> getObservation(
+            double x, 
+            double y, 
+            double z
+    ) 
+    {
+        if(x >= 0) 
+        {
+            if(y >= 0) 
+            {
+                if(z >= 0) 
+                {
+                    return Direction.RUF.observation();
+                }
+                else 
+                {
+                    return Direction.RUB.observation();
+                }
+            }
+            else 
+            {
+                if(z >= 0) 
+                {
+                    return Direction.RDF.observation();
+                }
+                else 
+                {
+                    return Direction.RDB.observation();
+                }
+            }
+        }
+        else 
+        {
+            if(y >= 0) 
+            {
+                if(z >= 0) 
+                {
+                    return Direction.LUF.observation();
+                }
+                else 
+                {
+                    return Direction.LUB.observation();
+                }
+            }
+            else 
+            {
+                if(y >= 0) 
+                {
+                    return Direction.LDF.observation();
+                }
+                else 
+                {
+                    return Direction.LDB.observation();
+                }
+            }
+        }
+    }
+    
+    /**
      *
      * @param array 
      * @return
@@ -673,5 +884,69 @@ public final class HandGesture
         }
     }
     
+    /**
+     * 
+     * @return 
+     */
+    public int getGestureUsage() 
+    {
+        return mGestureUsage;
+    }
+    
+    /**
+     * 
+     * @param type 
+     */
+    public void setGestureUsage(int type) 
+    {
+        switch(type) 
+        {
+            case TYPE_TRAINING:
+                mGestureUsage = TYPE_TRAINING;
+                break;
+                
+            case TYPE_TRACKING:
+                mGestureUsage = TYPE_TRACKING;
+                break;
+                
+            default:
+                mGestureUsage = TYPE_TRAINING;
+        }
+    }
+    
+    /**
+     * 
+     */
+    public void toggleUsage() 
+    {
+        if(mGestureUsage == TYPE_TRAINING) 
+        {
+            mGestureUsage = TYPE_TRACKING;
+        }
+        else 
+        {
+            mGestureUsage = TYPE_TRAINING;
+        }
+    }
+    
+    /**
+     * 
+     * @return 
+     */
+    public String getGestureUsageName() 
+    {
+        if(mGestureUsage == TYPE_TRAINING) 
+        {
+            return TYPE_TRAINING_NAME;
+        }
+        else if(mGestureUsage == TYPE_TRACKING) 
+        {
+            return TYPE_TRACKING_NAME;
+        }
+        else 
+        {
+            return TYPE_NONE_NAME;
+        }
+    }
     
 }

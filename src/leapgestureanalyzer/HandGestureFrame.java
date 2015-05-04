@@ -76,6 +76,17 @@ public class HandGestureFrame extends javax.swing.JInternalFrame
         initComponents();
         mHandGesture = gesture;
         
+        if(mHandGesture.getGestureUsage() == HandGesture.TYPE_TRAINING) 
+        {
+            mUsageToggle.setText("Training");
+            mUsageToggle.setSelected(false);
+        }
+        else 
+        {
+            mUsageToggle.setText("Tracking");
+            mUsageToggle.setSelected(true);
+        }
+        
         //  Write the type of gesture according to the name of the file
         switch(mHandGesture.getGestureType()) 
         {
@@ -339,6 +350,9 @@ public class HandGestureFrame extends javax.swing.JInternalFrame
         mSpeedTextField = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         mFramesTextField = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        mUsageToggle = new javax.swing.JToggleButton();
         jLabel2 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         mEmissionCodeTextArea = new javax.swing.JTextArea();
@@ -373,6 +387,15 @@ public class HandGestureFrame extends javax.swing.JInternalFrame
         mFramesTextField.setEditable(false);
         mFramesTextField.setText("jTextField1");
 
+        jLabel6.setText("Usage");
+
+        mUsageToggle.setText("jToggleButton1");
+        mUsageToggle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mUsageToggleActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -382,11 +405,16 @@ public class HandGestureFrame extends javax.swing.JInternalFrame
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1)
                     .addComponent(jLabel3)
-                    .addComponent(jLabel4))
+                    .addComponent(jLabel4)
+                    .addComponent(jLabel5)
+                    .addComponent(jLabel6))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(mUsageToggle)
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addComponent(mFramesTextField)
-                    .addComponent(mSpeedTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 93, Short.MAX_VALUE)
+                    .addComponent(mSpeedTextField)
                     .addComponent(mGestureTypeTextField))
                 .addContainerGap())
         );
@@ -405,7 +433,14 @@ public class HandGestureFrame extends javax.swing.JInternalFrame
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(mFramesTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(66, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel5))
+                    .addComponent(mUsageToggle))
+                .addContainerGap(41, Short.MAX_VALUE))
         );
 
         jLabel2.setText("General Information");
@@ -444,7 +479,7 @@ public class HandGestureFrame extends javax.swing.JInternalFrame
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 500, Short.MAX_VALUE)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 488, Short.MAX_VALUE)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel2)
                                 .addGap(0, 0, Short.MAX_VALUE)))))
@@ -468,9 +503,22 @@ public class HandGestureFrame extends javax.swing.JInternalFrame
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * 
+     * @param evt 
+     */
     private void mGestureTypeTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mGestureTypeTextFieldActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_mGestureTypeTextFieldActionPerformed
+
+    /**
+     * 
+     * @param evt 
+     */
+    private void mUsageToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mUsageToggleActionPerformed
+        mHandGesture.toggleUsage();
+        mUsageToggle.setText(mHandGesture.getGestureUsageName());
+    }//GEN-LAST:event_mUsageToggleActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -478,6 +526,8 @@ public class HandGestureFrame extends javax.swing.JInternalFrame
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
@@ -486,5 +536,6 @@ public class HandGestureFrame extends javax.swing.JInternalFrame
     private javax.swing.JTable mGestureDataTable;
     private javax.swing.JTextField mGestureTypeTextField;
     private javax.swing.JTextField mSpeedTextField;
+    private javax.swing.JToggleButton mUsageToggle;
     // End of variables declaration//GEN-END:variables
 }

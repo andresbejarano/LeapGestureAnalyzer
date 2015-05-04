@@ -106,6 +106,7 @@ public class LeapGestureAnalyzer extends javax.swing.JFrame
         mActionMenu = new javax.swing.JMenu();
         mOpenFileItem = new javax.swing.JMenuItem();
         mBuildHmmItem = new javax.swing.JMenuItem();
+        mBuildStateMachineItem = new javax.swing.JMenuItem();
         mSeparator1 = new javax.swing.JPopupMenu.Separator();
         mMinimizeFramesItem = new javax.swing.JMenuItem();
         mCloseFramesItem = new javax.swing.JMenuItem();
@@ -139,6 +140,16 @@ public class LeapGestureAnalyzer extends javax.swing.JFrame
             }
         });
         mActionMenu.add(mBuildHmmItem);
+
+        mBuildStateMachineItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
+        mBuildStateMachineItem.setText("Build State Machine");
+        mBuildStateMachineItem.setEnabled(false);
+        mBuildStateMachineItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mBuildStateMachineItemActionPerformed(evt);
+            }
+        });
+        mActionMenu.add(mBuildStateMachineItem);
         mActionMenu.add(mSeparator1);
 
         mMinimizeFramesItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_M, java.awt.event.InputEvent.CTRL_MASK));
@@ -211,6 +222,10 @@ public class LeapGestureAnalyzer extends javax.swing.JFrame
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * 
+     * @param evt 
+     */
     private void mOpenFileItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mOpenFileItemActionPerformed
         
         //  Set up the file chooser dialog
@@ -241,13 +256,18 @@ public class LeapGestureAnalyzer extends javax.swing.JFrame
             }
         }
         
-        //  If there's at least one window then enable the HMM generation
-        if(mDesktopPane.getAllFrames().length > 0 && !mBuildHmmItem.isEnabled()) 
+        //  If there's at least one window then enable the HMM and SM generation
+        if(mDesktopPane.getAllFrames().length > 0) 
         {
             mBuildHmmItem.setEnabled(true);
+            mBuildStateMachineItem.setEnabled(true);
         }
     }//GEN-LAST:event_mOpenFileItemActionPerformed
 
+    /**
+     * 
+     * @param evt 
+     */
     private void mBuildHmmItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mBuildHmmItemActionPerformed
         HMMFrame hmmFrame = new HMMFrame(this);
         hmmFrame.setVisible(true);
@@ -257,10 +277,18 @@ public class LeapGestureAnalyzer extends javax.swing.JFrame
         mDesktopPane.add(hmmFrame);
     }//GEN-LAST:event_mBuildHmmItemActionPerformed
 
+    /**
+     * 
+     * @param evt 
+     */
     private void mExitItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mExitItemActionPerformed
         System.exit(0);
     }//GEN-LAST:event_mExitItemActionPerformed
 
+    /**
+     * 
+     * @param evt 
+     */
     private void mNumStatesItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mNumStatesItemActionPerformed
         String value = JOptionPane.showInputDialog(this, "Insert the number of states for the HMM", "Leap Gesture Analyzer", JOptionPane.QUESTION_MESSAGE);
         if(value != null) 
@@ -285,6 +313,10 @@ public class LeapGestureAnalyzer extends javax.swing.JFrame
         }
     }//GEN-LAST:event_mNumStatesItemActionPerformed
 
+    /**
+     * 
+     * @param evt 
+     */
     private void mMinimizeFramesItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mMinimizeFramesItemActionPerformed
         JInternalFrame[] mFrames = mDesktopPane.getAllFrames();
         int n = mFrames.length;
@@ -304,6 +336,10 @@ public class LeapGestureAnalyzer extends javax.swing.JFrame
         }
     }//GEN-LAST:event_mMinimizeFramesItemActionPerformed
 
+    /**
+     * 
+     * @param evt 
+     */
     private void mCloseFramesItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mCloseFramesItemActionPerformed
         JInternalFrame[] mFrames = mDesktopPane.getAllFrames();
         int n = mFrames.length;
@@ -316,9 +352,26 @@ public class LeapGestureAnalyzer extends javax.swing.JFrame
         }
     }//GEN-LAST:event_mCloseFramesItemActionPerformed
 
+    /**
+     * 
+     * @param evt 
+     */
     private void mClearConsoleItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mClearConsoleItemActionPerformed
         mConsole.setText("Output console:");
     }//GEN-LAST:event_mClearConsoleItemActionPerformed
+
+    /**
+     * 
+     * @param evt 
+     */
+    private void mBuildStateMachineItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mBuildStateMachineItemActionPerformed
+        SMFrame smFrame = new SMFrame(this);
+        smFrame.setVisible(true);
+        smFrame.setClosable(true);
+        smFrame.setIconifiable(true);
+        smFrame.setMaximizable(true);
+        mDesktopPane.add(smFrame);
+    }//GEN-LAST:event_mBuildStateMachineItemActionPerformed
 
     /**
      * @param args the command line arguments
@@ -355,6 +408,7 @@ public class LeapGestureAnalyzer extends javax.swing.JFrame
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu mActionMenu;
     private javax.swing.JMenuItem mBuildHmmItem;
+    private javax.swing.JMenuItem mBuildStateMachineItem;
     private javax.swing.JMenuItem mClearConsoleItem;
     private javax.swing.JMenuItem mCloseFramesItem;
     private javax.swing.JMenu mConsoleMenu;
